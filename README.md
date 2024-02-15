@@ -17,7 +17,11 @@ After a few manual operations, it then uses the OpenAI API to generate as output
 2. Inside the `inputs` folder, add the original files. It can either be one PDF or multiple images.
 3. Back to the original directory, make sure to activate the virtual environment with the command `source venv/bin/activate`
 4. Within the virtual environment, run the command `python3 prepare_inputs.py`
-5. An interface will be opened, and for each question in sight, you must click on its 4 corners with the right button of the mouse, defining the desired question area in red. This must be done for all questions of each page. To go to the next page, press Enter. After going through all pages, pressing Enter will close the interface.
+5. An interface will be opened.
+    - For each question in sight, you must click on its 4 corners with the right button of the mouse, defining the desired question area in red. The clicking should start at the top-left and go clockwise.
+    - This must be done for all questions of each page.
+    - To go to the next page, press Enter.
+    - After going through all pages, pressing Enter will close the interface.
 4. Run the command `python3 main.py`.
 5. The code will run and a notification will alert when it stops. It will be created a folder called `outputs` and inside that another one called `json_outputs` containing the JSON files for all questions.
 
