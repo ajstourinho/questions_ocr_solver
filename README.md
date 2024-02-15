@@ -22,6 +22,7 @@ After a few manual operations, it then uses the OpenAI API to generate as output
     - This must be done for all questions of each page.
     - To go to the next page, press Enter.
     - After going through all pages, pressing Enter will close the interface.
+    > After all that, a folder called `questions_crop_imgs` will be created with all the cropped images of the questions.
 4. Run the command `python3 main.py`.
 5. The code will run and a notification will alert when it stops. It will be created a folder called `outputs` and, inside that, another one called `json_outputs`, containing the JSON files for all questions.
 
