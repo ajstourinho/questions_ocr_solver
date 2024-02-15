@@ -25,4 +25,4 @@ After a few manual operations, it then uses the OpenAI API to generate as output
 4. Run the command `python3 main.py`.
 5. The code will run and a notification will alert when it stops. It will be created a folder called `outputs` and, inside that, another one called `json_outputs`, containing the JSON files for all questions.
 
-> Extra step: To transform the JSON files into one single PDF, back in the original directory you can run the command `python3 json_outputs_to_pdf.py`. This will create a folder called `pdf_outputs` inside the `outputs` folder. There will be 1 PDF called `questions_ocr_and_answers.pdf` with one question (image and OCR transform) and its solution per page.
+> Extra step: To transform the JSON files into one single PDF, back in the original directory you can run the command `python3 json_outputs_to_pdf.py`. This will create a folder called `pdf_outputs` inside the `outputs` folder. There will be 1 PDF called `questions_ocr_and_answers.pdf` with one question (image and OCR transform) per page with its solution.
