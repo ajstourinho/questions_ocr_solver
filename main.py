@@ -2,6 +2,7 @@ import base64
 import requests
 import json
 import os
+import concurrent.futures
 
 from configuration import API_KEY
 from assistant_instructions import assistant_instructions
@@ -99,14 +100,23 @@ if __name__ == "__main__":
     images = sorted(images)
 
 
-    # Loop api request for all images
-    for img_name in images:
-        response = gpt_request(os.path.join(images_path, img_name))
-        data = response.json()
+    files = [os.path.join(images_path, f) for f in images]
 
-        img_name_wo_ext = img_name.split('.')[0]
-        save_data_as_json(img_name_wo_ext, data)
+    # Use ThreadPoolExecutor to make requests in parallel
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+        api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
+        for future in concurrent.futures.as_completed(api_response):
+            # Define file names
+            image_file = api_response[future]
+            file_name = os.path.basename(image_file)
+            file_name_without_extension, _ = os.path.splitext(file_name)
 
+            # Define response and data from the gpt_request response
+            response = future.result()
+            data = response.json()
+
+            # Save the data as a JSON file
+            save_data_as_json(file_name_without_extension, data)
 
     # Script ends here
     os.system("""
