@@ -4,3 +4,5 @@ venv/
 .DS_Store
 inputs/
 output_0_areas/
+output_1_jsons/
+output_2_docx_pdf/
