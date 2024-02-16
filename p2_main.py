@@ -72,12 +72,12 @@ def save_data_as_json(img_name, data):
     # Transform content string to JSON
     try:
         # Attempt to load the string as JSON
-        parsed_json = json.loads(content)
+        parsed_json = json.loads(content, strict=False)
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON: {e}")
 
-    # Create output folder for the JSON files
-    output_folder = 'outputs'
+    # Create output folder (if it already does no exist) for the JSON files
+    output_folder = 'output_1_jsons'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -96,45 +96,7 @@ def user_check(message):
 
     if check.lower() != "y":
         print("Python script terminated by user.")
-        sys.exit()
-
-def fake_request(image_file):
-    class MyJSONObject:
-        def __init__(self, json_string):
-            self.data = json.loads(json_string)
-        
-        @property
-        def json(self):
-            return json.dumps(self.data)
-    
-
-    json_string =  """{
-  "id": "chatcmpl-8sJOVL1RpBcSKJUSq7RuC0X4bGvhD",
-  "object": "chat.completion",
-  "created": 1707954955,
-  "model": "gpt-4-1106-vision-preview",
-  "usage": {
-    "prompt_tokens": 1033,
-    "completion_tokens": 300,
-    "total_tokens": 1333
-  },
-  "choices": [
-    {
-      "message": {
-        "role": "assistant",
-        "content": "```json\n{\n  \"enunciado\": \"Um paciente em investigação para síndrome de má-absorção foi submetido a múltiplas biópsias do duodeno. O exame histológico mostrou atrofia de vilos, numerosos linfócitos intraepiteliais e regeneração de criptas. A imuno-histoquímica mostrou tratar-se de linfócitos CD8+. Os achados são consistentes com:\",\n  \"tipo\": \"Objetiva\",\n  \"resposta\": {\n    \"a\": {\n      \"alternativa\": \"Linfoma do Intestino Delgado\",\n      \"textoExplicativo\": \"A atrofia de vilos, presença de linfócitos intraepiteliais e regeneração de criptas sugerem doença celíaca, e não necessariamente linfoma.\"\n    },\n    \"b\": {\n      \"alternativa\": \"Doença de Crohn\",\n      \"textoExplicativo\": \"Embora a Doença de Crohn possa apresentar inflamação, os achados de atrofia de vilos, linfócitos intraepiteliais e regeneração de criptas são mais típicos da doença celíaca.\"\n    },\n    \"c\": {\n      \"alternativa\": \"Do"
-      },
-      "finish_reason": "length",
-      "index": 0
-    }
-  ]
-}"""
-    obj = MyJSONObject(json_string)
-
-    print("fake request made")
-
-    return obj
-    
+        sys.exit()   
 
 if __name__ == "__main__":
 
@@ -156,6 +118,7 @@ if __name__ == "__main__":
     # Initialize error counter
     error_count = 0
     
+    # Loop through all image files until no error appears (or if the user desires to procede)
     while len(files) != 0:
 
         # Check with user to make all the API Calls
@@ -163,8 +126,7 @@ if __name__ == "__main__":
 
         # Use ThreadPoolExecutor to make requests in parallel
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            # api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
-            api_response = {executor.submit(fake_request, image_file): image_file for image_file in files}
+            api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
             for future in concurrent.futures.as_completed(api_response):
 
                 image_file = api_response[future]
@@ -183,21 +145,14 @@ if __name__ == "__main__":
 
                     # Pop out the completed file from files list
                     files.remove(image_file)
-                    print(len(files))
                 except Exception as e:
                     print(e)
                     error_count += 1
 
         if error_count != 0:
-            print(f"There was {error_count} errors in the API calls. You may want to try again")
+            print(f"\nThere were {error_count} errors in the API calls. For them, you may want to try again.\n")
             # Reinitialize error counter
             error_count = 0
-
-
-    # Check the errors
-    # print(f"Number of errors in the api requests: {len(errors)}")
-    # for el in errors:
-    #     print(el)
 
     # Script ends here
     os.system("""
