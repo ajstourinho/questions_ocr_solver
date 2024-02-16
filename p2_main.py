@@ -5,6 +5,7 @@ import os
 import concurrent.futures
 
 from p0_configuration import API_KEY
+from p0_configuration import MAX_TOKENS_PER_API_CALL
 from p0_assistant_instructions import assistant_instructions
 
 # Function to encode the image
@@ -43,7 +44,7 @@ def gpt_request(image_path):
         ]
         }
     ],
-    "max_tokens": 1000
+    "max_tokens": MAX_TOKENS_PER_API_CALL
     }
 
     # Make API call 
