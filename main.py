@@ -82,6 +82,9 @@ def save_data_as_json(img_name, data):
     # Specify the filename you want to write to
     filename = os.path.join(output_folder, img_name)
 
+    # Add JSON extension
+    filename += ".json"
+    
     # Write the 'choices' data to a file
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(parsed_json, file, indent=2, ensure_ascii=False)
