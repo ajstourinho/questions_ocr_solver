@@ -32,10 +32,8 @@ def add_data_docx(data, doc, file_name):
     """Add content from JSON data to a .docx file."""
 
     # Add original picture of questions
-    image_filename = find_image_matching_json(file_name, "questions_crop_imgs")
+    image_filename = find_image_matching_json(file_name, "output_0_areas")
     doc.add_picture(image_filename, width=Inches(6.0))
-
-    doc.add_paragraph('\n')
 
     # Add content from JSON
 
@@ -58,10 +56,10 @@ if __name__ == "__main__":
 
 
     # Define JSON folder
-    jsons_folder = 'outputs'
+    jsons_folder = 'output_1_jsons'
 
     # Create folder for the output files
-    output_folder = 'converted_outputs'
+    output_folder = 'output_2_docx_pdf'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
