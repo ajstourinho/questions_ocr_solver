@@ -9,7 +9,11 @@ After a few manual operations, it then uses the OpenAI API to generate as output
 2. Inside the directory, run `python3 -m venv venv`
 3. Run `source venv/bin/activate` to activate the virtual environment
 4. Now within the virtual environment, run `pip install -r requirements.txt`
-5. Create a `configuration.py` file, and write `API_KEY="<your_api_key>"` with the correct value for your OpenAI `API_KEY`
+5. Create a `configuration.py` file with the following content (changing for your desired constants):
+```
+API_KEY = "<your_openai_api_key>"
+MAX_TOKENS_PER_API_CALL = 1000
+```
 
 ## Usage
 
