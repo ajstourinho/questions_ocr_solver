@@ -179,16 +179,18 @@ if __name__ == "__main__":
             images_to_pdf(folder_path, pdf_path)
             input_pdf_path = pdf_path
 
-        # Create a folder with all the cropped images from the PDF
-        temporary_folder = 'questions_crop_imgs'
-        if not os.path.exists(temporary_folder):
-            os.makedirs(temporary_folder)
+        # Create a folder with all the cropped image areas from the PDF
+        output_folder = 'output_0_areas'
+        if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
 
-        process_pdf(input_pdf_path, temporary_folder)
+        process_pdf(input_pdf_path, output_folder)
 
         # Remove temporary file
-        if os.path.exists(os.path.join(folder_path, "temporary.pdf")):
-            os.remove(os.path.join(folder_path, "temporary.pdf"))
+        temp_pdf_path = os.path.join(folder_path, "temporary.pdf")
+        if os.path.exists(temp_pdf_path):
+            os.remove(temp_pdf_path)
+            print(f"PDF removed successfully: {temp_pdf_path}")
 
     except Exception as e:
         print(f'Error: {e}')
