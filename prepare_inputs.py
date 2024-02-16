@@ -167,6 +167,8 @@ if __name__ == "__main__":
     folder_path = 'inputs'
 
     try:
+        print("Preparing inputs...")
+        
         (file_type, file_count) = check_folder_contents_and_format(folder_path)
 
         # Define the input_pdf_path based on file_type
