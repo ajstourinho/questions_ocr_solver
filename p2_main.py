@@ -3,6 +3,7 @@ import requests
 import json
 import os
 import concurrent.futures
+import sys
 
 from p0_configuration import API_KEY
 from p0_configuration import MAX_TOKENS_PER_API_CALL
@@ -88,26 +89,38 @@ def save_data_as_json(img_name, data):
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(parsed_json, file, indent=2, ensure_ascii=False)
 
+def user_check(message):
+    check = input(message)
+
+    if check.lower() != "y":
+        print("Python script terminated by user.")
+        sys.exit()
+
 if __name__ == "__main__":
 
     # Path to your images
-    images_path = "questions_crop_imgs"
+    images_path = "output_0_areas"
 
     # List all files in the specified directory
     all_entries = os.listdir(images_path)
 
-    # Filter images and sort them alphabetically
+    # Filter images files and sort them alphabetically
     image_filter = lambda file: file.endswith((".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff"))
     images = list(filter(image_filter , all_entries))
     images = sorted(images)
 
-
+    # Define list of files for the multithread api calls
     files = [os.path.join(images_path, f) for f in images]
 
+
+    # Initialize errors list
     errors = []
 
+    # Check message for all the API Calls
+    user_check(f"There will be made {len(files)} api calls with {MAX_TOKENS_PER_API_CALL} max_tokens each.\nWrite y to procede: ")
+
     # Use ThreadPoolExecutor to make requests in parallel
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
         for future in concurrent.futures.as_completed(api_response):
 
