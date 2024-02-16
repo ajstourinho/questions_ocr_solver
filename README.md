@@ -14,7 +14,7 @@ After a few manual operations, it then uses the OpenAI API to generate as output
 ## Usage
 
 1. Inside the directory, create a folder called `inputs`.
-2. Inside the `inputs` folder, add the original files. It can either be one PDF or multiple images.
+2. Inside the `inputs` folder, add the original files. It can be either one PDF or multiple images.
 3. Back to the original directory, make sure to activate the virtual environment with the command `source venv/bin/activate`
 4. Within the virtual environment, run the command `python3 prepare_inputs.py`
 5. An interface will be opened.
@@ -23,6 +23,7 @@ After a few manual operations, it then uses the OpenAI API to generate as output
     - To go to the next page, press Enter.
     - After going through all pages, pressing Enter will close the interface.
     > After all that, a folder called `questions_crop_imgs` will be created with all the cropped images of the questions.
+    > A good practice is to check if the images in the `questions_crop_imgs` are well-formatted.
 4. Run the command `python3 main.py`.
 5. The code will run and a notification will alert when it stops. It will be created a folder called `outputs` containing the JSON files for all questions.
 
