@@ -45,7 +45,7 @@ def gpt_request(image_path):
         ]
         }
     ],
-    "max_tokens": 600
+    "max_tokens": 1000
     }
 
     # Make API call 
@@ -105,21 +105,33 @@ if __name__ == "__main__":
 
     files = [os.path.join(images_path, f) for f in images]
 
+    errors = []
+
     # Use ThreadPoolExecutor to make requests in parallel
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
         for future in concurrent.futures.as_completed(api_response):
-            # Define file names
+
             image_file = api_response[future]
-            file_name = os.path.basename(image_file)
-            file_name_without_extension, _ = os.path.splitext(file_name)
 
-            # Define response and data from the gpt_request response
-            response = future.result()
-            data = response.json()
+            try:
+                # Define file names
+                file_name = os.path.basename(image_file)
+                file_name_without_extension, _ = os.path.splitext(file_name)
 
-            # Save the data as a JSON file
-            save_data_as_json(file_name_without_extension, data)
+                # Define response and data from the gpt_request response
+                response = future.result()
+                data = response.json()
+                
+                # Save the data as a JSON file
+                save_data_as_json(file_name_without_extension, data)
+            except Exception as e:
+                errors.append((e, image_file))
+
+    # Check the errors
+    print(f"Number of errors in the api requests: {len(errors)}")
+    for el in errors:
+        print(el)
 
     # Script ends here
     os.system("""
