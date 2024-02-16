@@ -4,15 +4,13 @@ import json
 import os
 import concurrent.futures
 
-from configuration import API_KEY
-from assistant_instructions import assistant_instructions
+from p0_configuration import API_KEY
+from p0_assistant_instructions import assistant_instructions
 
 # Function to encode the image
 def encode_image(image_path):
   with open(image_path, "rb") as image_file:
     return base64.b64encode(image_file.read()).decode('utf-8')
-
-
 
 def gpt_request(image_path):
     print(f"Making request for OpenAI API...")
