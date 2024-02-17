@@ -32,5 +32,7 @@ MAX_TOKENS_PER_API_CALL = 2500
 4. Run the command `python3 p2_main.py`.
     - If any error occurs, the code will propose you consider re-doing the failed requests.
     > The code will run and a notification will alert when it stops or if an error occurs. It will be created a folder called `output_1_jsons` containing the JSON files for all questions.
+    
+    > It will also be created a folder called `api_responses`, with the JSON files for all the responses from the API calls.
 5. To transform the JSON files into one single PDF, run the command `python3 p3_jsons_converter.py`.
     > This will create a folder called `output_2_docx_pdf`, where there will be 1 PDF and 1 docx file.
