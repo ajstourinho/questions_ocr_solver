@@ -27,8 +27,10 @@ MAX_TOKENS_PER_API_CALL = 1000
     - To go to the next page, press Enter.
     - After going through all pages, pressing Enter will close the interface.
     > After all that, a folder called `output_0_areas` will be created with all the cropped imagea areas of the questions.
-    > A good practice is to check if the images in the `output_0_areas` are well-formatted.
+    
+    > A good practice is to check if the images in the `output_0_areas` are well-formatted. If not, you can re-do the steps 4 and 5, selecting only the incorrect ones to be overwritten and skipping the correct ones. 
 4. Run the command `python3 p2_main.py`.
+    - If any error occurs, the code will propose you consider re-doing the failed requests.
     > The code will run and a notification will alert when it stops or if an error occurs. It will be created a folder called `output_1_jsons` containing the JSON files for all questions.
 5. To transform the JSON files into one single PDF, run the command `python3 p3_jsons_converter.py`.
     > This will create a folder called `output_2_docx_pdf`, where there will be 1 PDF and 1 docx file.
