@@ -4,6 +4,9 @@ import json
 import os
 import concurrent.futures
 import sys
+import time
+import threading
+import re
 
 from p0_configuration import API_KEY
 from p0_configuration import MAX_TOKENS_PER_API_CALL
@@ -50,10 +53,22 @@ def gpt_request(image_path):
     "max_tokens": MAX_TOKENS_PER_API_CALL
     }
 
-    # Make API call 
-    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
 
-    return response
+    # Deal with OpenAI API Rate Limits
+    semaphore = threading.Semaphore(MAX_REQUESTS_PER_MINUTE)
+
+    with semaphore:
+
+        # Make API call 
+        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+
+        # Wait to respect the rate limit
+        # Calculate the necessary delay
+        requests_per_worker_per_minute = MAX_REQUESTS_PER_MINUTE / MAX_WORKERS
+
+        time.sleep(60 / requests_per_worker_per_minute)
+
+        return response
 
 def save_data_as_json(img_name, data):
     print(f"Saving data as JSON: image {img_name}")
@@ -115,9 +130,18 @@ if __name__ == "__main__":
     files = [os.path.join(images_path, f) for f in images]
 
 
-    # Initialize error counter
+    # Create a folder to register api responses 
+    api_responses_folder = 'api_responses'
+    if not os.path.exists(api_responses_folder):
+        os.makedirs(api_responses_folder) 
+
+    # Initialize error counter for api calls
     error_count = 0
     
+    # API rate limit and number of workers
+    MAX_REQUESTS_PER_MINUTE = 80
+    MAX_WORKERS = 1  # Number of threads in the ThreadPoolExecutor
+
     # Loop through all image files until no error appears (or if the user desires to procede)
     while len(files) != 0:
 
@@ -125,7 +149,7 @@ if __name__ == "__main__":
         user_check(f"There will be made {len(files)} api calls with {MAX_TOKENS_PER_API_CALL} max_tokens each.\nWrite y to procede: ")
 
         # Use ThreadPoolExecutor to make requests in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
             for future in concurrent.futures.as_completed(api_response):
 
@@ -140,6 +164,33 @@ if __name__ == "__main__":
                     response = future.result()
                     data = response.json()
                     
+                    # Handle Error in response
+                    if "error" in data:
+                        # Print Error Code
+                        error_code = data["error"]["code"]
+                        print(f"Error code: {error_code}\n")
+
+                        # Define response message string
+                        response_message = data["error"]["message"]
+
+                        if error_code == "rate_limit_exceeded":
+                            # Regular expression to extract the time
+                            match = re.search(r'Please try again in ([\d.]+)s', response_message)
+
+                            # Extracted time in seconds
+                            wait_time = float(match.group(1)) if match else None
+
+                            # Round it
+                            rounded_wait_time = int(wait_time) + 1
+
+                            # Pause workers
+                            time.sleep(rounded_wait_time)
+
+                    # Save response for registering (and possible check of errors)
+                    file_path = os.path.join(api_responses_folder, file_name_without_extension) + "_resp.json"
+                    with open(file_path, 'w') as file:
+                        json.dump(data, file, indent=4)
+
                     # Save the data as a JSON file
                     save_data_as_json(file_name_without_extension, data)
                         
