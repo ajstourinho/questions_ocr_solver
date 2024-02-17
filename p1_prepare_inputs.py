@@ -113,7 +113,7 @@ def process_pdf(pdf_path, output_folder):
         groups_of_points = select_multiple_groups_of_points(page_image)
 
         for j, group in enumerate(groups_of_points):
-            output_filename = os.path.join(output_folder, f"output_page_{i+1}_area_{j}.jpg")
+            output_filename = os.path.join(output_folder, f"output_page_{(i+1):03d}_area_{j}.jpg")
             perspective_transform_and_save(page_image, group, output_filename)
             print(f"Saved {output_filename}")
 
