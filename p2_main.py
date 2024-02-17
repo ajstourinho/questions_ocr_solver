@@ -125,7 +125,7 @@ if __name__ == "__main__":
         user_check(f"There will be made {len(files)} api calls with {MAX_TOKENS_PER_API_CALL} max_tokens each.\nWrite y to procede: ")
 
         # Use ThreadPoolExecutor to make requests in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             api_response = {executor.submit(gpt_request, image_file): image_file for image_file in files}
             for future in concurrent.futures.as_completed(api_response):
 
@@ -142,16 +142,19 @@ if __name__ == "__main__":
                     
                     # Save the data as a JSON file
                     save_data_as_json(file_name_without_extension, data)
+                        
 
                     # Pop out the completed file from files list
                     files.remove(image_file)
                 except Exception as e:
-                    print(f"The following Exception occurred on the file: {image_file}\n  ")
+                    print(f"\nThe following Exception occurred on the file: {image_file}\n  ")
                     print(e)
+                    print('\n')
+                    
                     error_count += 1
 
         if error_count != 0:
-            print(f"\nThere were {error_count} errors in the API calls. For them, you may want to try again.\n")
+            print(f"\n\nThere were {error_count} errors in the API calls. For them, you may want to try again.\n")
             # Reinitialize error counter
             error_count = 0
 
