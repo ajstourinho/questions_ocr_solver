@@ -4,6 +4,8 @@ from docx import Document
 from docx2pdf import convert
 import glob
 from docx.shared import Inches
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 def find_image_matching_json(json_name, search_directory):
     # Strip the .json extension to get the base name
@@ -24,9 +26,9 @@ def load_json_data(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
 
-def create_pdf_from_docx(docx_path):
-    """Convert a .docx file to PDF (may require admin permisions)."""
-    convert(docx_path)
+# def create_pdf_from_docx(docx_path):
+#     """Convert a .docx file to PDF (may require admin permisions)."""
+#     convert(docx_path)
 
 def add_data_docx(data, doc, file_name):
     """Add content from JSON data to a .docx file."""
@@ -51,6 +53,16 @@ def add_data_docx(data, doc, file_name):
 
     doc.add_paragraph('Alternatica correta: ' + data['resposta']['alternativaCorreta'])
 
+def add_content_to_pdf(canvas, data):
+    """Add content from JSON data to a single page in a PDF."""
+    canvas.drawString(72, 800, data['enunciado'])
+    y_position = 780
+
+    for key, value in data['resposta'].items():
+        if key != 'alternativaCorreta':
+            text = f"{key.upper()}. {value['alternativa']}: {value['textoExplicativo']}"
+            canvas.drawString(72, y_position, text)
+            y_position -= 20 * (1 + len(text) // 90)  # Adjust y position based on text length
 
 if __name__ == "__main__":
 
@@ -64,9 +76,13 @@ if __name__ == "__main__":
         os.makedirs(output_folder)
 
 
-    # Create and docx
+    # Create docx
     docx_path = os.path.join(output_folder, 'questions.docx')
     doc = Document()
+
+    # Create docx
+    pdf_path = os.path.join(output_folder, 'questions.pdf')
+    pdf = canvas.Canvas(pdf_path, pagesize=letter)
   
     # Iterate over each JSON file in the directory
     for file_name in os.listdir(jsons_folder):
@@ -74,15 +90,24 @@ if __name__ == "__main__":
             file_path = os.path.join(jsons_folder, file_name)
             data = load_json_data(file_path)
             
-            # Create docx
+            # Add JSON content to docx
             add_data_docx(data, doc, file_name)
+
+            # Add JSON content to pdf
+            add_data_docx(data, doc, file_name)
+            add_content_to_pdf(pdf, data)
 
             # Add page break only if it is not the last one
             if file_name != os.listdir(jsons_folder)[-1]:
                 doc.add_page_break()
 
+                pdf.showPage()
+
     # Save .docx document
     doc.save(docx_path)
+
+    # Save .pdf document
+    pdf.save()
             
-    # Save the .pdf converted from .docx
-    create_pdf_from_docx(docx_path)
+    # # Save the .pdf converted from .docx
+    # create_pdf_from_docx(docx_path)
