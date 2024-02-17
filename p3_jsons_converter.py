@@ -85,10 +85,11 @@ if __name__ == "__main__":
     doc.save(docx_path)
 
     # Check if there is Word installed to convert docx to pdf
-    print("With the docx2pdf library, it is required to have Word installed.\n")
+    print("\nWith the docx2pdf library, it is required to have Word installed.\n")
     word_check = input("Is Word installed in this computer (y for Yes)? ")
 
     if word_check.lower() == "y":
+        print("To conver docx to pdf, Word may open to ask for permission.")
         # Save the .pdf converted from .docx
         create_pdf_from_docx(docx_path)
     else:
