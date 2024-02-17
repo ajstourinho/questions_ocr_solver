@@ -39,17 +39,20 @@ def add_data_docx(data, doc, file_name):
 
     doc.add_paragraph().add_run(data['enunciado']).bold = True
 
-    for key, value in data['resposta'].items():
-        if key != "alternativaCorreta":
-            p1 = doc.add_paragraph()
-            p1.add_run(key.upper() + ')  ' + value['alternativa']).bold = True
-            
-            p2 = doc.add_paragraph(value['textoExplicativo'])
-            p2.style = 'List Bullet'
+    if data['tipo'] == "Discursiva":
+        doc.add_paragraph(data['resposta'])
+    if data['tipo'] == "Objetiva":
+        for key, value in data['resposta'].items():
+            if key != "alternativaCorreta":
+                p1 = doc.add_paragraph()
+                p1.add_run(key.upper() + ')  ' + value['alternativa']).bold = True
+                
+                p2 = doc.add_paragraph(value['textoExplicativo'])
+                p2.style = 'List Bullet'
 
-    doc.add_paragraph('\n')
+        doc.add_paragraph('\n')
 
-    doc.add_paragraph('Alternatica correta: ' + data['resposta']['alternativaCorreta'])
+        doc.add_paragraph('Alternatica correta: ' + data['resposta']['alternativaCorreta'])
 
 
 if __name__ == "__main__":
@@ -83,9 +86,10 @@ if __name__ == "__main__":
 
     # Save .docx document
     doc.save(docx_path)
+    print("\nThe docx file was saved.")
 
     # Check if there is Word installed to convert docx to pdf
-    print("\nWith the docx2pdf library, it is required to have Word installed.\n")
+    print("\nIn order to convert docx to pdf, with the docx2pdf library, it is required to have Word installed.\n")
     word_check = input("Is Word installed in this computer (y for Yes)? ")
 
     if word_check.lower() == "y":
