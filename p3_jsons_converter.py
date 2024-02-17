@@ -33,7 +33,7 @@ def add_data_docx(data, doc, file_name):
 
     # Add original picture of questions
     image_filename = find_image_matching_json(file_name, "output_0_areas")
-    doc.add_picture(image_filename, width=Inches(6.0))
+    doc.add_picture(image_filename, width=Inches(5.5))
 
     # Add content from JSON
 
@@ -47,8 +47,13 @@ def add_data_docx(data, doc, file_name):
                 p1 = doc.add_paragraph()
                 p1.add_run(key.upper() + ')  ' + value['alternativa']).bold = True
                 
-                p2 = doc.add_paragraph(value['textoExplicativo'])
-                p2.style = 'List Bullet'
+        doc.add_paragraph('\n')
+
+        for key, value in data['resposta'].items():
+            if key != "alternativaCorreta":
+                p2 = doc.add_paragraph(key.upper() + ')  ' + value['alternativa'])
+                
+                p2.add_run(value['textoExplicativo'])
 
         doc.add_paragraph('\n')
 
@@ -93,7 +98,7 @@ if __name__ == "__main__":
     word_check = input("Is Word installed in this computer (y for Yes)? ")
 
     if word_check.lower() == "y":
-        print("To conver docx to pdf, Word may open to ask for permission.")
+        print("To convert docx to pdf, Word may open to ask for permission.")
         # Save the .pdf converted from .docx
         create_pdf_from_docx(docx_path)
     else:
