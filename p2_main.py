@@ -154,6 +154,11 @@ if __name__ == "__main__":
             # Reinitialize error counter
             error_count = 0
 
+            # Alert error
+            os.system("""
+            osascript -e 'display notification "An Error was encountered. Check the terminal to procede." with title "Python Script Notification"'
+            """)
+
     # Script ends here
     os.system("""
             osascript -e 'display notification "Script has finished running." with title "Python Script Notification"'
