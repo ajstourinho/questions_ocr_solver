@@ -12,7 +12,7 @@ After a few manual operations, it then uses the OpenAI API to generate as output
 5. Create a `p0_configuration.py` file with the following content (changing for your desired constants):
 ```
 API_KEY = "<your_openai_api_key>"
-MAX_TOKENS_PER_API_CALL = 1000
+MAX_TOKENS_PER_API_CALL = 2500
 ```
 
 ## Usage
