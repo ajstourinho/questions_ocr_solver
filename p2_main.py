@@ -146,6 +146,7 @@ if __name__ == "__main__":
                     # Pop out the completed file from files list
                     files.remove(image_file)
                 except Exception as e:
+                    print(f"The following Exception occurred on the file: {image_file}\n  ")
                     print(e)
                     error_count += 1
 
