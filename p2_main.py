@@ -32,7 +32,7 @@ def gpt_request(image_path):
 
     # Define parameters for API call
     payload = {
-    "model": "gpt-4-vision-preview",
+    "model": "gpt-4-turbo-2024-04-09",
     "messages": [
         {
         "role": "user",

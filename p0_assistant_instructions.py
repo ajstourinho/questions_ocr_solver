@@ -10,7 +10,7 @@ Gere como output nenhum texto além de somente um json no seguinte formato:
 
 Nesse json, o campo "enunciado" deve ser uma string cujo valor é o enunciado da questão que foi extraído da imagem de input.
 O valor do campo "tipo" deve ser uma string com dois possíveis valores: "Discursiva" ou "Objetiva"; a depender se a questão da imagem de input requer respectivamente uma resposta textual discursiva ou a escolha de uma das alternativas presentes.
-O valor do campo "resposta" dependerá do valor do "tipo" no seguinte sentido: se a questão for "Discursiva", será uma string com uma resposta textual que solucione exatamente o que foi perguntado pelo enunciado; se a questão for "Objetiva", será um objeto contendo todas as alternativas acompanhadas de uma string explicando suas veracidades ou falsidades, e contendo também um caractere para indicar a alternativa correta.
+O valor do campo "resposta" dependerá do valor do "tipo" no seguinte sentido: se a questão for "Discursiva", será uma string com uma resposta textual que solucione exatamente o que foi perguntado pelo enunciado; se a questão for "Objetiva", será um objeto contendo todas as alternativas acompanhadas de uma string explicando suas veracidades ou falsidades (concisa, sucinta), e contendo também um caractere para indicar a alternativa correta.
 
 A seguir estão dois possíveis exemplos de json no formato correto de output.
 

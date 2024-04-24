@@ -32,8 +32,8 @@ def add_data_docx(data, doc, file_name):
     """Add content from JSON data to a .docx file."""
 
     # Add original picture of questions
-    image_filename = find_image_matching_json(file_name, "output_0_areas")
-    doc.add_picture(image_filename, width=Inches(5.5))
+    # image_filename = find_image_matching_json(file_name, "output_0_areas")
+    # doc.add_picture(image_filename, width=Inches(5.5))
 
     # Add content from JSON
 
@@ -51,7 +51,8 @@ def add_data_docx(data, doc, file_name):
 
         for key, value in data['resposta'].items():
             if key != "alternativaCorreta":
-                p2 = doc.add_paragraph(key.upper() + ')  ' + value['alternativa'])
+                # p2 = doc.add_paragraph(key.upper() + ')  ' + value['alternativa'])
+                p2 = doc.add_paragraph(key.upper() + ')  ')
                 
                 p2.add_run(value['textoExplicativo'])
 
@@ -76,8 +77,9 @@ if __name__ == "__main__":
     docx_path = os.path.join(output_folder, 'questions.docx')
     doc = Document()
   
-    # Iterate over each JSON file in the directory
-    for file_name in os.listdir(jsons_folder):
+    sorted_jsons_folder = sorted(os.listdir(jsons_folder))
+    # Iterate alphabetically over each JSON file in the directory
+    for file_name in sorted_jsons_folder:
         if file_name.endswith('.json'):
             file_path = os.path.join(jsons_folder, file_name)
             data = load_json_data(file_path)
