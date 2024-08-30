@@ -8,7 +8,7 @@ Gere como output nenhum texto além de somente um json no seguinte formato:
 }
 ```
 
-Nesse json, o campo "enunciado" deve ser uma string cujo valor é o enunciado da questão que foi extraído da imagem de input.
+Nesse json, o campo "enunciado" deve ser uma string cujo valor é o enunciado da questão que foi extraído da imagem de input (se houver numeração na questão, deve constar na string do enunciado, com uma quebra de linha na sequência).
 O valor do campo "tipo" deve ser uma string com dois possíveis valores: "Discursiva" ou "Objetiva"; a depender se a questão da imagem de input requer respectivamente uma resposta textual discursiva ou a escolha de uma das alternativas presentes.
 O valor do campo "resposta" dependerá do valor do "tipo" no seguinte sentido: se a questão for "Discursiva", será uma string com uma resposta textual que solucione exatamente o que foi perguntado pelo enunciado; se a questão for "Objetiva", será um objeto contendo todas as alternativas acompanhadas de uma string explicando suas veracidades ou falsidades (concisa, sucinta), e contendo também um caractere para indicar a alternativa correta.
 
@@ -31,6 +31,10 @@ Exemplo 1:
     "c": {
       "alternativa": "Pedro Álvares Cabral",
       "textoExplicativo": "É atribuído a Pedro Álvares Cabral, sendo um navegador e explorador português, o título de 'descobridor' do Brasil por ter sido o comandante da armada que primeiro explorou o território antes desconhecido."
+    },
+    "d": {
+      "alternativa": "Pedro",
+      "textoExplicativo": "Não está bem definido que Pedro está sendo referido."
     },
     "alternativaCorreta": "C"
   }
