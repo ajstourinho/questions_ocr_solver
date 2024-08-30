@@ -28,7 +28,7 @@ def create_pdf_from_docx(docx_path):
     """Convert a .docx file to PDF (may require admin permisions)."""
     convert(docx_path)
 
-def add_data_docx(data, doc, file_name):
+def add_data_docx(data, doc, file_name, count):
     """Add content from JSON data to a .docx file."""
 
     # Add original picture of questions
@@ -37,7 +37,10 @@ def add_data_docx(data, doc, file_name):
 
     # Add content from JSON
 
-    doc.add_paragraph().add_run(data['enunciado']).bold = True
+    doc.add_paragraph().add_run(f"Questão {count+1})").bold = True
+
+    # doc.add_paragraph().add_run(data['enunciado']).bold = True
+    doc.add_paragraph().add_run(data['enunciado'])
 
     if data['tipo'] == "Discursiva":
         doc.add_paragraph(data['resposta'])
@@ -45,9 +48,13 @@ def add_data_docx(data, doc, file_name):
         for key, value in data['resposta'].items():
             if key != "alternativaCorreta":
                 p1 = doc.add_paragraph()
-                p1.add_run(key.upper() + ')  ' + value['alternativa']).bold = True
+                # p1.add_run(key.upper() + ')  ' + value['alternativa']).bold = True
+                p1.add_run(key.upper() + ')  ' + value['alternativa'])
                 
         doc.add_paragraph('\n')
+
+        p = doc.add_paragraph()
+        p.add_run('Solução:').bold = True
 
         for key, value in data['resposta'].items():
             if key != "alternativaCorreta":
@@ -58,7 +65,7 @@ def add_data_docx(data, doc, file_name):
 
         doc.add_paragraph('\n')
 
-        doc.add_paragraph('Alternatica correta: ' + data['resposta']['alternativaCorreta'])
+        doc.add_paragraph('Alternativa correta: ' + data['resposta']['alternativaCorreta'].upper())
 
 
 if __name__ == "__main__":
@@ -79,16 +86,16 @@ if __name__ == "__main__":
   
     sorted_jsons_folder = sorted(os.listdir(jsons_folder))
     # Iterate alphabetically over each JSON file in the directory
-    for file_name in sorted_jsons_folder:
+    for count, file_name in enumerate(sorted_jsons_folder):
         if file_name.endswith('.json'):
             file_path = os.path.join(jsons_folder, file_name)
             data = load_json_data(file_path)
             
             # Create docx
-            add_data_docx(data, doc, file_name)
+            add_data_docx(data, doc, file_name, count)
 
             # Add page break only if it is not the last one
-            if file_name != os.listdir(jsons_folder)[-1]:
+            if file_name != sorted_jsons_folder[-1]:
                 doc.add_page_break()
 
     # Save .docx document
